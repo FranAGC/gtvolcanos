@@ -1,0 +1,93 @@
+# src/main/resources/application.yml
+
+spring:
+  application:
+    name: gtvolcanos
+
+  config:
+    import: optional:file:.env[.properties]
+
+  # ===== BASE DE DATOS =====
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  # ===== JPA / HIBERNATE =====
+  jpa:
+    hibernate:
+      ddl-auto: validate # Flyway maneja la BD, JPA solo valida
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # ===== FLYWAY =====
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # ===== SEGURIDAD =====
+  security:
+    filter:
+      order: 10
+
+# ===== SERVIDOR =====
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# ===== JWT =====
+app:
+  jwt:
+    secret: ${JWT_SECRET:clave-secreta-local-minimo-256-bits-cambiar-en-produccion}
+    expiration: 86400000 # 24 horas en ms
+    refresh-expiration: 604800000 # 7 días en ms
+
+# ===== SWAGGER / OPENAPI =====
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+# ===== LOGS =====
+logging:
+  level:
+    root: INFO
+    com.trheecodes.gtvolcanos: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# ===== PERFIL: LOCAL =====
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    show-sql: true
+
+---
+# ===== PERFIL: PRODUCCION =====
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+logging:
+  level:
+    root: WARN
+    com.trheecodes.gtvolcanos: INFO
