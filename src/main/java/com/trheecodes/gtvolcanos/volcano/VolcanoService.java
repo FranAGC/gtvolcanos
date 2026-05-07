@@ -4,10 +4,10 @@ import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.volcano.dto.VolcanoResponse;
 import com.trheecodes.gtvolcanos.volcano.dto.VolcanoSummaryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +16,9 @@ public class VolcanoService {
     private final VolcanoRepository volcanoRepository;
 
     @Transactional(readOnly = true)
-    public List<VolcanoSummaryResponse> getAllVolcanoes() {
-        return volcanoRepository.findAll().stream()
-                .map(v -> new VolcanoSummaryResponse(v.getId(), v.getName(), v.getCountry(), v.getRegion()))
-                .toList();
+    public Page<VolcanoSummaryResponse> getAllVolcanoes(Pageable pageable) {
+        return volcanoRepository.findAll(pageable)
+                .map(v -> new VolcanoSummaryResponse(v.getId(), v.getName(), v.getCountry(), v.getRegion()));
     }
 
     @Transactional(readOnly = true)

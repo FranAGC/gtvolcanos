@@ -1,6 +1,7 @@
 package com.trheecodes.gtvolcanos.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.trheecodes.gtvolcanos.config.properties.CorsProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -11,38 +12,30 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
+@EnableConfigurationProperties(CorsProperties.class)
 public class CorsConfig {
 
-    @Value("${app.cors.allowed-origins}")
-    private String allowedOrigins;
+    private final CorsProperties corsProperties;
 
-    @Value("${app.cors.allowed-methods}")
-    private String allowedMethods;
-
-    @Value("${app.cors.allowed-headers}")
-    private String allowedHeaders;
-
-    @Value("${app.cors.allow-credentials}")
-    private boolean allowCredentials;
-
-    @Value("${app.cors.max-age}")
-    private long maxAge;
+    public CorsConfig(CorsProperties corsProperties) {
+        this.corsProperties = corsProperties;
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
-        config.setAllowedMethods(Arrays.asList(allowedMethods.split(",")));
+        config.setAllowedOrigins(Arrays.asList(corsProperties.allowedOrigins().split(",")));
+        config.setAllowedMethods(Arrays.asList(corsProperties.allowedMethods().split(",")));
 
-        if ("*".equals(allowedHeaders)) {
+        if ("*".equals(corsProperties.allowedHeaders())) {
             config.setAllowedHeaders(List.of("*"));
         } else {
-            config.setAllowedHeaders(Arrays.asList(allowedHeaders.split(",")));
+            config.setAllowedHeaders(Arrays.asList(corsProperties.allowedHeaders().split(",")));
         }
 
-        config.setAllowCredentials(allowCredentials);
-        config.setMaxAge(maxAge);
+        config.setAllowCredentials(corsProperties.allowCredentials());
+        config.setMaxAge(corsProperties.maxAge());
 
         // Exponer el header Authorization para que el cliente pueda leer el JWT
         config.setExposedHeaders(List.of("Authorization"));

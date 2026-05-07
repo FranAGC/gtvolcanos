@@ -63,6 +63,10 @@ public class JwtService {
                 && !extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
+    public long getExpiration() {
+        return jwtExpiration;
+    }
+
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()

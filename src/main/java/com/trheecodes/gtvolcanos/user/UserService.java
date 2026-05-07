@@ -1,5 +1,6 @@
 package com.trheecodes.gtvolcanos.user;
 
+import com.trheecodes.gtvolcanos.shared.exception.ConflictException;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.user.dto.CreateUserRequest;
 import com.trheecodes.gtvolcanos.user.dto.UserResponse;
@@ -18,18 +19,16 @@ public class UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Ya existe un usuario con el email: " + request.email());
+            throw new ConflictException("Ya existe un usuario con el email: " + request.email());
         }
 
-        User user = new User();
-        user.setEmail(request.email());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-
-        if (request.role() != null) {
-            user.setRole(request.role());
-        }
+        User user = User.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .role(request.role() != null ? request.role() : UserRole.EDITOR)
+                .build();
 
         User saved = userRepository.save(user);
         return toResponse(saved);

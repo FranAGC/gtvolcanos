@@ -46,18 +46,18 @@ public class Volcano {
 
     private Short vei;
 
-    @Column(columnDefinition = "integer default 0")
-    private Integer casualties;
+    @Column
+    private Integer casualties = 0;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean monitored;
+    @Column
+    private Boolean monitored = false;
 
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT NOW()")
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT NOW()")
+    @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 }

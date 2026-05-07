@@ -1,10 +1,12 @@
 package com.trheecodes.gtvolcanos.auth.jwt;
 
+import com.trheecodes.gtvolcanos.shared.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -50,9 +53,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        } catch (Exception ignored) {
-            // Token inválido, expirado o usuario no encontrado — se continúa sin autenticar;
+        } catch (UnauthorizedException e) {
+            // Token inválido o expirado — se continúa sin autenticar;
             // Spring Security rechazará el acceso a rutas protegidas.
+            log.debug("JWT inválido o expirado en {}: {}", request.getRequestURI(), e.getMessage());
+        } catch (Exception e) {
+            log.warn("Error inesperado al procesar JWT en {}: {}", request.getRequestURI(), e.getMessage());
         }
 
         filterChain.doFilter(request, response);
