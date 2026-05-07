@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class SecurityConfig {
         private final JwtAuthenticationFilter jwtAuthenticationFilter;
         private final UserDetailsService userDetailsService;
         private final PasswordEncoder passwordEncoder;
+        private final CorsConfigurationSource corsConfigurationSource;
 
         private static final String[] PUBLIC_URLS = {
                         "/v1/auth/**",
@@ -61,6 +63,7 @@ public class SecurityConfig {
                                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
                 http
+                                .cors(c -> c.configurationSource(corsConfigurationSource))
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authenticationProvider(authenticationProvider())
