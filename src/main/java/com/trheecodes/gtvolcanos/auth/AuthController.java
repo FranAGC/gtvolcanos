@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
     /**
-     * POST /api/v1/auth/login
+     * POST /auth/login
      * Autentica al usuario y devuelve un JWT de acceso.
      */
     @PostMapping("/login")

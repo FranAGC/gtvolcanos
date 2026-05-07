@@ -5,8 +5,8 @@ CREATE TABLE users (
     refresh_token TEXT,
     first_name   VARCHAR(100) NOT NULL,
     last_name    VARCHAR(100) NOT NULL,
-    role         VARCHAR(20)  NOT NULL DEFAULT 'editor'
-                              CHECK (role IN ('admin', 'editor', 'viewer')),
+    role         VARCHAR(20)  NOT NULL DEFAULT 'EDITOR'
+                              CHECK (role IN ('ADMIN', 'EDITOR', 'VIEWER')),
     active       BOOLEAN      NOT NULL DEFAULT TRUE,
     created_at   TIMESTAMPTZ  DEFAULT NOW(),
     updated_at   TIMESTAMPTZ  DEFAULT NOW()

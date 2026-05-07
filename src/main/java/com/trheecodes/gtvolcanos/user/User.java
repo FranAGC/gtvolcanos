@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private UserRole role = UserRole.editor;
+    private UserRole role = UserRole.EDITOR;
     
     @Builder.Default
     @Column(nullable = false)

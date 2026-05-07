@@ -37,11 +37,11 @@ public class SecurityConfig {
         private final CorsConfigurationSource corsConfigurationSource;
 
         private static final String[] PUBLIC_URLS = {
-                        "/v1/auth/**",
+                        "/auth/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
-                        "/v1/api-docs/**",
-                        "/v1/api-docs"
+                        "/api-docs/**",
+                        "/api-docs"
         };
 
         @Bean
@@ -78,6 +78,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/volcanoes", "/volcanoes/**")
                                                 .permitAll()
                                                 .requestMatchers(PUBLIC_URLS).permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

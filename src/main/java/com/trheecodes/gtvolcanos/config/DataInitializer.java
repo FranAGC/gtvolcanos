@@ -32,13 +32,12 @@ public class DataInitializer implements CommandLineRunner {
                     .password(passwordEncoder.encode(adminPassword))
                     .firstName("Admin")
                     .lastName("System")
-                    .role(UserRole.admin)
+                    .role(UserRole.ADMIN)
                     .active(true)
                     .build();
 
             userRepository.save(admin);
 
-            // ✅ Solo loguea el email, nunca la contraseña
             log.info("Usuario administrador creado: {}", adminEmail);
         } else {
             log.debug("Usuario administrador ya existe, omitiendo creación");
