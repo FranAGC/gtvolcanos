@@ -1,0 +1,98 @@
+package com.trheecodes.gtvolcanos.config;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.trheecodes.gtvolcanos.auth.jwt.JwtAuthenticationFilter;
+import com.trheecodes.gtvolcanos.shared.exception.ApiError;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final UserDetailsService userDetailsService;
+        private final PasswordEncoder passwordEncoder;
+
+        private static final String[] PUBLIC_URLS = {
+                        "/v1/auth/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v1/api-docs/**",
+                        "/v1/api-docs"
+        };
+
+        @Bean
+        public DaoAuthenticationProvider authenticationProvider() {
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+                provider.setPasswordEncoder(passwordEncoder);
+                return provider;
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+                return config.getAuthenticationManager();
+        }
+
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                ObjectMapper mapper = new ObjectMapper()
+                                .registerModule(new JavaTimeModule())
+                                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+                http
+                                .csrf(AbstractHttpConfigurer::disable)
+                                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider())
+                                .exceptionHandling(ex -> ex
+                                                .authenticationEntryPoint((req, res, e) -> writeError(res, mapper, 401,
+                                                                "No autenticado",
+                                                                "Token requerido o inválido"))
+                                                .accessDeniedHandler((req, res, e) -> writeError(res, mapper, 403,
+                                                                "Acceso denegado",
+                                                                "No tienes permisos para este recurso")))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(HttpMethod.GET, "/volcanoes", "/volcanoes/**")
+                                                .permitAll()
+                                                .requestMatchers(PUBLIC_URLS).permitAll()
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+                return http.build();
+        }
+
+        private void writeError(jakarta.servlet.http.HttpServletResponse response,
+                        ObjectMapper mapper, int status,
+                        String error, String message) throws IOException {
+                ApiError apiError = ApiError.builder()
+                                .timestamp(LocalDateTime.now())
+                                .status(status)
+                                .error(error)
+                                .message(message)
+                                .path(null)
+                                .build();
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setStatus(status);
+                mapper.writeValue(response.getWriter(), apiError);
+        }
+}
