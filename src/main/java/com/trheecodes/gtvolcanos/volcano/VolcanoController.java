@@ -37,7 +37,7 @@ public class VolcanoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(volcanoService.createVolcano(request));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<VolcanoResponse> updateVolcano(
             @PathVariable Integer id,

@@ -72,13 +72,19 @@ public class SecurityConfig {
                                 "Acceso denegado",
                                 "No tienes permisos para este recurso")))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/volcanoes", "/volcanoes/**")
-                        .permitAll()
+                        // ── Volcanoes ──────────────────────────────────────
+                        .requestMatchers(HttpMethod.GET, "/volcanoes", "/volcanoes/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,   "/volcanoes").hasAnyRole("ADMIN", "EDITOR")
+                        .requestMatchers(HttpMethod.PATCH,  "/volcanoes/**").hasAnyRole("ADMIN", "EDITOR")
+                        .requestMatchers(HttpMethod.DELETE, "/volcanoes/**").hasAnyRole("ADMIN", "EDITOR")
+                        // ── Volcano Tourism ────────────────────────────────
+                        .requestMatchers(HttpMethod.GET, "/volcano-tourism", "/volcano-tourism/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,   "/volcano-tourism").hasAnyRole("ADMIN", "EDITOR")
+                        .requestMatchers(HttpMethod.PATCH,  "/volcano-tourism/**").hasAnyRole("ADMIN", "EDITOR")
+                        .requestMatchers(HttpMethod.DELETE, "/volcano-tourism/**").hasAnyRole("ADMIN", "EDITOR")
+                        // ── Users ──────────────────────────────────────────
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/volcanoes").hasAnyRole("ADMIN", "EDITOR")
-                        .requestMatchers(HttpMethod.PUT, "/volcanoes/**").hasAnyRole("ADMIN", "EDITOR")
-                        .requestMatchers(HttpMethod.DELETE, "/volcanoes/**").hasAnyRole("ADMIN", "EDITOR")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
