@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.OffsetDateTime;
 
 @Service
@@ -34,8 +33,7 @@ public class VolcanoService {
                 v.getLatitude(), v.getLongitude(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(),
-                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt()
-        );
+                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
     }
 
     @Transactional
@@ -89,7 +87,6 @@ public class VolcanoService {
                 v.getLatitude(), v.getLongitude(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(),
-                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt()
-        );
+                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
     }
 }

@@ -3,7 +3,6 @@ package com.trheecodes.gtvolcanos.guide;
 import com.trheecodes.gtvolcanos.guide.dto.GuideRequest;
 import com.trheecodes.gtvolcanos.guide.dto.GuideResponse;
 import com.trheecodes.gtvolcanos.guide.guide_volcano.GuideVolcano;
-import com.trheecodes.gtvolcanos.guide.guide_volcano.GuideVolcanoRepository;
 import com.trheecodes.gtvolcanos.shared.exception.ConflictException;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.volcano.Volcano;
@@ -21,9 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GuideService {
 
-    private final GuideRepository      guideRepository;
-    private final VolcanoRepository     volcanoRepository;
-    private final GuideVolcanoRepository guideVolcanoRepository;
+    private final GuideRepository guideRepository;
+    private final VolcanoRepository volcanoRepository;
 
     // ── GET all (paginated) ───────────────────────────────────────────────────
 
@@ -107,23 +105,40 @@ public class GuideService {
 
     /** Applies only non-null fields — works for both POST and PATCH. */
     private void applyPatch(Guide g, GuideRequest r) {
-        if (r.firstName()       != null) g.setFirstName(r.firstName());
-        if (r.lastName()        != null) g.setLastName(r.lastName());
-        if (r.phone()           != null) g.setPhone(r.phone());
-        if (r.email()           != null) g.setEmail(r.email());
-        if (r.nationality()     != null) g.setNationality(r.nationality());
-        if (r.spokenLanguages() != null) g.setSpokenLanguages(r.spokenLanguages().toArray(new String[0]));
-        if (r.profilePhotoUrl() != null) g.setProfilePhotoUrl(r.profilePhotoUrl());
-        if (r.bio()             != null) g.setBio(r.bio());
-        if (r.facebook()        != null) g.setFacebook(r.facebook());
-        if (r.instagram()       != null) g.setInstagram(r.instagram());
-        if (r.whatsapp()        != null) g.setWhatsapp(r.whatsapp());
-        if (r.licenseNumber()   != null) g.setLicenseNumber(r.licenseNumber());
-        if (r.certified()       != null) g.setCertified(r.certified());
-        if (r.experienceYears() != null) g.setExperienceYears(r.experienceYears());
-        if (r.pricePerDayUsd()  != null) g.setPricePerDayUsd(r.pricePerDayUsd());
-        if (r.maxGroupSize()    != null) g.setMaxGroupSize(r.maxGroupSize());
-        if (r.active()          != null) g.setActive(r.active());
+        if (r.firstName() != null)
+            g.setFirstName(r.firstName());
+        if (r.lastName() != null)
+            g.setLastName(r.lastName());
+        if (r.phone() != null)
+            g.setPhone(r.phone());
+        if (r.email() != null)
+            g.setEmail(r.email());
+        if (r.nationality() != null)
+            g.setNationality(r.nationality());
+        if (r.spokenLanguages() != null)
+            g.setSpokenLanguages(r.spokenLanguages().toArray(new String[0]));
+        if (r.profilePhotoUrl() != null)
+            g.setProfilePhotoUrl(r.profilePhotoUrl());
+        if (r.bio() != null)
+            g.setBio(r.bio());
+        if (r.facebook() != null)
+            g.setFacebook(r.facebook());
+        if (r.instagram() != null)
+            g.setInstagram(r.instagram());
+        if (r.whatsapp() != null)
+            g.setWhatsapp(r.whatsapp());
+        if (r.licenseNumber() != null)
+            g.setLicenseNumber(r.licenseNumber());
+        if (r.certified() != null)
+            g.setCertified(r.certified());
+        if (r.experienceYears() != null)
+            g.setExperienceYears(r.experienceYears());
+        if (r.pricePerDayUsd() != null)
+            g.setPricePerDayUsd(r.pricePerDayUsd());
+        if (r.maxGroupSize() != null)
+            g.setMaxGroupSize(r.maxGroupSize());
+        if (r.active() != null)
+            g.setActive(r.active());
 
         if (r.volcanoIds() != null) {
             g.getGuideVolcanoes().clear();
@@ -168,7 +183,6 @@ public class GuideService {
                 g.getActive(),
                 refs,
                 g.getCreatedAt(),
-                g.getUpdatedAt()
-        );
+                g.getUpdatedAt());
     }
 }

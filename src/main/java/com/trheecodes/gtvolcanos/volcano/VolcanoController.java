@@ -22,7 +22,7 @@ public class VolcanoController {
 
     @GetMapping
     public ResponseEntity<Page<VolcanoSummaryResponse>> getAllVolcanoes(
-            @PageableDefault(size = 20, sort = "name") Pageable pageable) {
+            @PageableDefault(size = 50, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(volcanoService.getAllVolcanoes(pageable));
     }
 

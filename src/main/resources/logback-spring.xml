@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Variables de entorno con valores por defecto -->
+    <property name="LOG_PATH" value="${LOG_PATH:-/app/logs}"/>
+    <property name="LOG_LEVEL_APP" value="${LOG_LEVEL_APP:-INFO}"/>
+    <property name="LOG_LEVEL_ROOT" value="${LOG_LEVEL_ROOT:-WARN}"/>
+
+    <!-- Formatos de log -->
+    <!-- Console: Con colores para mejor lectura en desarrollo -->
+    <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%15.15t] %cyan(%-40.40logger{39}) : %m%n"/>
+    <!-- File: Sin colores, estándar -->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger{39} : %m%n"/>
+
+    <!-- Appender: Consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender: Archivo General -->
+    <appender name="FILE_GENERAL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/mi-app.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/mi-app-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Appender: Archivo de Errores -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/mi-app-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/mi-app-error-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Appender: Archivo de Requests -->
+    <appender name="FILE_REQUESTS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/mi-app-requests.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/mi-app-requests-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ========================================== -->
+    <!-- PERFIL DEV -->
+    <!-- ========================================== -->
+    <springProfile name="dev | local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+        
+        <!-- Nivel DEBUG para nuestra aplicación -->
+        <logger name="com.trheecodes.gtvolcanos" level="DEBUG" />
+        
+        <!-- Mostrar SQL de Hibernate en dev -->
+        <logger name="org.hibernate.SQL" level="DEBUG" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+    </springProfile>
+
+    <!-- ========================================== -->
+    <!-- PERFILES DOCKER Y PROD -->
+    <!-- ========================================== -->
+    <springProfile name="docker | prod">
+        <!-- Nivel Root (Librerías externas) -->
+        <root level="${LOG_LEVEL_ROOT}">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE_GENERAL" />
+            <appender-ref ref="FILE_ERROR" />
+        </root>
+        
+        <!-- Nivel Aplicación -->
+        <logger name="com.trheecodes.gtvolcanos" level="${LOG_LEVEL_APP}" />
+        
+        <!-- Silenciar librerías ruidosas -->
+        <logger name="org.hibernate" level="WARN" />
+        <logger name="org.springframework" level="WARN" />
+        <logger name="com.zaxxer.hikari" level="WARN" />
+        <logger name="org.apache.catalina" level="WARN" />
+
+        <!-- Aislar los logs de requests en su propio archivo y evitar duplicados en el general -->
+        <logger name="com.trheecodes.gtvolcanos.config.filter.RequestLoggingFilter" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE_REQUESTS" />
+        </logger>
+    </springProfile>
+
+</configuration>

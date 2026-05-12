@@ -39,3 +39,5 @@ out/
 /*.sql
 /*.log
 data/**
+logs/**
+.env.local

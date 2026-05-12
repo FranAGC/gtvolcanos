@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  app:
+    # Construcción de la imagen a partir del Dockerfile local
+    build: .
+    container_name: gtvolcanos-app
+    # Inyección de todas las variables de entorno desde el archivo .env
+    env_file:
+      - .env
+    # Mapeo del puerto de la aplicación hacia el exterior
+    ports:
+      - "8080:8080"
+    # Asegura que la app no inicie hasta que Postgres esté completamente listo
+    depends_on:
+      db:
+        condition: service_healthy
+    # Montaje de logs. 
+    # PARA PRODUCCIÓN en un servidor Linux, cambiar esto a:
+    # - /var/log/mi-app:/app/logs
+    volumes:
+      - ./logs:/app/logs
+    # Política de reinicio automático frente a caídas
+    restart: unless-stopped
+    # Chequeo de salud mediante el endpoint de Actuator
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s # Dar tiempo para que arranque la JVM
+    networks:
+      - backend
+
+  db:
+    # Imagen oficial y ligera de Postgres 16
+    image: postgres:16-alpine
+    container_name: gtvolcanos-db
+    # Inyección de variables de entorno para inicializar la BD
+    env_file:
+      - .env
+    # Volumen nombrado para garantizar la persistencia de la base de datos
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # ELIMINAR O COMENTAR EN PRODUCCIÓN:
+    # Exponer este puerto solo es útil para conectarse desde un cliente externo (DBeaver) en desarrollo
+    ports:
+      - "5433:5432"
+    # Política de reinicio automático
+    restart: unless-stopped
+    # Chequeo de salud nativo de Postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+# Declaración de los volúmenes a utilizar
+volumes:
+  postgres_data:
+
+# Declaración de la red interna aislada
+networks:
+  backend:
+    driver: bridge
