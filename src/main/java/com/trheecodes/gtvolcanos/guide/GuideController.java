@@ -35,7 +35,7 @@ public class GuideController {
 
     /** Público — detalle de un guía por id. */
     @GetMapping("/{id}")
-    public ResponseEntity<GuideResponse> getById(@PathVariable Integer id) {
+    public ResponseEntity<GuideResponse> getById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(guideService.getById(id));
     }
 
@@ -48,14 +48,14 @@ public class GuideController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<GuideResponse> patch(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody GuideRequest request) {
         return ResponseEntity.ok(guideService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Integer id) {
         guideService.delete(id);
         return ResponseEntity.noContent().build();
     }

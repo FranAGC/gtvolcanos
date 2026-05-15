@@ -21,20 +21,20 @@ public class SrcVolcanoController {
     /** Público — todos los recursos de volcanes con filtro opcional por type. */
     @GetMapping
     public ResponseEntity<List<SrcVolcanoResponse>> getAll(
-            @RequestParam(required = false) String type) {
+            @RequestParam(name = "type", required = false) String type) {
         return ResponseEntity.ok(srcVolcanoService.getAll(type));
     }
 
     /** Público — todos los recursos de un volcán. */
     @GetMapping("/volcanoes/{volcanoId}")
     public ResponseEntity<List<SrcVolcanoResponse>> getByVolcanoId(
-            @PathVariable Integer volcanoId) {
+            @PathVariable(name = "volcanoId") Integer volcanoId) {
         return ResponseEntity.ok(srcVolcanoService.getByVolcanoId(volcanoId));
     }
 
     /** Público — detalle de un recurso por su id. */
     @GetMapping("/{id}")
-    public ResponseEntity<SrcVolcanoResponse> getById(@PathVariable Integer id) {
+    public ResponseEntity<SrcVolcanoResponse> getById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(srcVolcanoService.getById(id));
     }
 
@@ -49,14 +49,14 @@ public class SrcVolcanoController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<SrcVolcanoResponse> patch(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody SrcVolcanoRequest request) {
         return ResponseEntity.ok(srcVolcanoService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Integer id) {
         srcVolcanoService.delete(id);
         return ResponseEntity.noContent().build();
     }

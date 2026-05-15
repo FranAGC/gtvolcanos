@@ -26,7 +26,7 @@ public class VolcanoTourismController {
     }
 
     @GetMapping("/{volcanoId}")
-    public ResponseEntity<VolcanoTourismResponse> getByVolcanoId(@PathVariable Integer volcanoId) {
+    public ResponseEntity<VolcanoTourismResponse> getByVolcanoId(@PathVariable(name = "volcanoId") Integer volcanoId) {
         return ResponseEntity.ok(tourismService.getByVolcanoId(volcanoId));
     }
 
@@ -40,14 +40,14 @@ public class VolcanoTourismController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<VolcanoTourismResponse> patch(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody VolcanoTourismRequest request) {
         return ResponseEntity.ok(tourismService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Integer id) {
         tourismService.delete(id);
         return ResponseEntity.noContent().build();
     }

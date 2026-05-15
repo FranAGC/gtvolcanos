@@ -20,14 +20,14 @@ public class GuideVolcanoController {
     /** Público — volcanes asignados a un guía. */
     @GetMapping("/guides/{guideId}")
     public ResponseEntity<List<VolcanoByGuideResponse>> getVolcanoesByGuide(
-            @PathVariable Integer guideId) {
+            @PathVariable(name = "guideId") Integer guideId) {
         return ResponseEntity.ok(guideVolcanoService.getVolcanoesByGuide(guideId));
     }
 
     /** Público — guías asignados a un volcán. */
     @GetMapping("/volcanoes/{volcanoId}")
     public ResponseEntity<List<GuideByVolcanoResponse>> getGuidesByVolcano(
-            @PathVariable Integer volcanoId) {
+            @PathVariable(name = "volcanoId") Integer volcanoId) {
         return ResponseEntity.ok(guideVolcanoService.getGuidesByVolcano(volcanoId));
     }
 
@@ -41,14 +41,14 @@ public class GuideVolcanoController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<GuideVolcanoResponse> patch(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody GuideVolcanoRequest request) {
         return ResponseEntity.ok(guideVolcanoService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Integer id) {
         guideVolcanoService.delete(id);
         return ResponseEntity.noContent().build();
     }

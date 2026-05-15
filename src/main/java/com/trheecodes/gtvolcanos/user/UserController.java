@@ -34,7 +34,7 @@ public class UserController {
      * Obtiene un usuario por ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(ApiResponse.ok("Usuario encontrado", userService.getUserById(id)));
     }
 }

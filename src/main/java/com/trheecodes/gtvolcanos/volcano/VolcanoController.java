@@ -27,7 +27,7 @@ public class VolcanoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VolcanoResponse> getVolcanoById(@PathVariable Integer id) {
+    public ResponseEntity<VolcanoResponse> getVolcanoById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(volcanoService.getVolcanoById(id));
     }
 
@@ -40,14 +40,14 @@ public class VolcanoController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<VolcanoResponse> updateVolcano(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody VolcanoRequest request) {
         return ResponseEntity.ok(volcanoService.updateVolcano(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> deleteVolcano(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteVolcano(@PathVariable(name = "id") Integer id) {
         volcanoService.deleteVolcano(id);
         return ResponseEntity.noContent().build();
     }

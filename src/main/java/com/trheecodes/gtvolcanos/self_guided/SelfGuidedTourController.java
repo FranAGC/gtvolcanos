@@ -21,13 +21,13 @@ public class SelfGuidedTourController {
     /** Público — todos los tours de un volcán. */
     @GetMapping("/volcano/{volcanoId}")
     public ResponseEntity<List<SelfGuidedTourResponse>> getByVolcanoId(
-            @PathVariable Integer volcanoId) {
+            @PathVariable(name = "volcanoId") Integer volcanoId) {
         return ResponseEntity.ok(selfGuidedTourService.getByVolcanoId(volcanoId));
     }
 
     /** Público — detalle de un tour por su id. */
     @GetMapping("/{id}")
-    public ResponseEntity<SelfGuidedTourResponse> getById(@PathVariable Integer id) {
+    public ResponseEntity<SelfGuidedTourResponse> getById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(selfGuidedTourService.getById(id));
     }
 
@@ -42,14 +42,14 @@ public class SelfGuidedTourController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
     public ResponseEntity<SelfGuidedTourResponse> patch(
-            @PathVariable Integer id,
+            @PathVariable(name = "id") Integer id,
             @Valid @RequestBody SelfGuidedTourRequest request) {
         return ResponseEntity.ok(selfGuidedTourService.patch(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Integer id) {
         selfGuidedTourService.delete(id);
         return ResponseEntity.noContent().build();
     }
