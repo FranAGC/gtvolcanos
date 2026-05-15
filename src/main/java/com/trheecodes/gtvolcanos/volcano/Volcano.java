@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -52,6 +54,12 @@ public class Volcano {
     @Column
     private Boolean monitored = false;
 
+    @Column(unique = true)
+    private Integer popularity;
+
+    @Column(name = "image_url", columnDefinition = "text")
+    private String imageUrl;
+
     @Column(columnDefinition = "text")
     private String description;
 
@@ -60,4 +68,7 @@ public class Volcano {
 
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    @OneToMany(mappedBy = "volcano", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<com.trheecodes.gtvolcanos.src_volcano.SrcVolcano> sources = new ArrayList<>();
 }

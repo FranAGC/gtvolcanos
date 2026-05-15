@@ -1,14 +1,14 @@
-package com.trheecodes.gtvolcanos.src_self_guided.dto;
+package com.trheecodes.gtvolcanos.src_volcano.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record SrcSelfGuidedTourRequest(
+public record SrcVolcanoRequest(
 
-        @NotNull(message = "El id del tour auto-guiado es obligatorio")
-        Integer selfGuidedTourId,
+        @NotNull(message = "El id del volcán es obligatorio")
+        Integer volcanoId,
 
         @NotBlank(message = "El tipo es obligatorio")
         @Pattern(regexp = "video|route|guide|other",

@@ -1,10 +1,10 @@
-package com.trheecodes.gtvolcanos.src_self_guided;
+package com.trheecodes.gtvolcanos.src_volcano;
 
-import com.trheecodes.gtvolcanos.self_guided.SelfGuidedTour;
-import com.trheecodes.gtvolcanos.self_guided.SelfGuidedTourRepository;
+import com.trheecodes.gtvolcanos.volcano.Volcano;
+import com.trheecodes.gtvolcanos.volcano.VolcanoRepository;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
-import com.trheecodes.gtvolcanos.src_self_guided.dto.SrcSelfGuidedTourRequest;
-import com.trheecodes.gtvolcanos.src_self_guided.dto.SrcSelfGuidedTourResponse;
+import com.trheecodes.gtvolcanos.src_volcano.dto.SrcVolcanoRequest;
+import com.trheecodes.gtvolcanos.src_volcano.dto.SrcVolcanoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,40 +14,57 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SrcSelfGuidedTourService {
+public class SrcVolcanoService {
 
-    private final SrcSelfGuidedTourRepository srcRepository;
-    private final SelfGuidedTourRepository    selfGuidedTourRepository;
+    private final SrcVolcanoRepository srcRepository;
+    private final VolcanoRepository    volcanoRepository;
 
-    // ── GET by self_guided_tour_id ────────────────────────────────────────────
+    // ── GET by volcano_id ────────────────────────────────────────────
 
     @Transactional(readOnly = true)
-    public List<SrcSelfGuidedTourResponse> getBySelfGuidedTourId(Integer selfGuidedTourId) {
-        if (!selfGuidedTourRepository.existsById(selfGuidedTourId)) {
+    public List<SrcVolcanoResponse> getByVolcanoId(Integer volcanoId) {
+        if (!volcanoRepository.existsById(volcanoId)) {
             throw new ResourceNotFoundException(
-                    "Tour auto-guiado no encontrado con id: " + selfGuidedTourId);
+                    "Tour auto-guiado no encontrado con id: " + volcanoId);
         }
-        return srcRepository.findBySelfGuidedTourId(selfGuidedTourId)
+        return srcRepository.findByVolcanoId(volcanoId)
                 .stream().map(this::toResponse).toList();
+    }
+
+    // ── GET all (with optional type filter) ───────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public List<SrcVolcanoResponse> getAll(String type) {
+        List<SrcVolcano> result;
+        if (type != null && !type.isBlank()) {
+            result = srcRepository.findByTypeOrderByIdDesc(type);
+        } else {
+            result = srcRepository.findAllByOrderByIdDesc();
+        }
+        // Limitar a los últimos 5 registros
+        return result.stream()
+                .limit(5)
+                .map(this::toResponse)
+                .toList();
     }
 
     // ── GET by id ─────────────────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
-    public SrcSelfGuidedTourResponse getById(Integer id) {
+    public SrcVolcanoResponse getById(Integer id) {
         return toResponse(findOrThrow(id));
     }
 
     // ── POST ──────────────────────────────────────────────────────────────────
 
     @Transactional
-    public SrcSelfGuidedTourResponse create(SrcSelfGuidedTourRequest request) {
-        SelfGuidedTour parent = selfGuidedTourRepository.findById(request.selfGuidedTourId())
+    public SrcVolcanoResponse create(SrcVolcanoRequest request) {
+        Volcano parent = volcanoRepository.findById(request.volcanoId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Tour auto-guiado no encontrado con id: " + request.selfGuidedTourId()));
+                        "Tour auto-guiado no encontrado con id: " + request.volcanoId()));
 
-        SrcSelfGuidedTour src = new SrcSelfGuidedTour();
-        src.setSelfGuidedTour(parent);
+        SrcVolcano src = new SrcVolcano();
+        src.setVolcano(parent);
         applyPatch(src, request);
         src.setCreatedAt(OffsetDateTime.now());
         srcRepository.save(src);
@@ -57,15 +74,15 @@ public class SrcSelfGuidedTourService {
     // ── PATCH ─────────────────────────────────────────────────────────────────
 
     @Transactional
-    public SrcSelfGuidedTourResponse patch(Integer id, SrcSelfGuidedTourRequest request) {
-        SrcSelfGuidedTour src = findOrThrow(id);
+    public SrcVolcanoResponse patch(Integer id, SrcVolcanoRequest request) {
+        SrcVolcano src = findOrThrow(id);
 
-        if (request.selfGuidedTourId() != null
-                && !request.selfGuidedTourId().equals(src.getSelfGuidedTour().getId())) {
-            SelfGuidedTour parent = selfGuidedTourRepository.findById(request.selfGuidedTourId())
+        if (request.volcanoId() != null
+                && !request.volcanoId().equals(src.getVolcano().getId())) {
+            Volcano parent = volcanoRepository.findById(request.volcanoId())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            "Tour auto-guiado no encontrado con id: " + request.selfGuidedTourId()));
-            src.setSelfGuidedTour(parent);
+                            "Tour auto-guiado no encontrado con id: " + request.volcanoId()));
+            src.setVolcano(parent);
         }
 
         applyPatch(src, request);
@@ -84,24 +101,24 @@ public class SrcSelfGuidedTourService {
 
     // ── helpers ───────────────────────────────────────────────────────────────
 
-    private SrcSelfGuidedTour findOrThrow(Integer id) {
+    private SrcVolcano findOrThrow(Integer id) {
         return srcRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Recurso no encontrado con id: " + id));
     }
 
-    private void applyPatch(SrcSelfGuidedTour s, SrcSelfGuidedTourRequest r) {
+    private void applyPatch(SrcVolcano s, SrcVolcanoRequest r) {
         if (r.type()        != null) s.setType(r.type());
         if (r.description() != null) s.setDescription(r.description());
         if (r.srcUrl()      != null) s.setSrcUrl(r.srcUrl());
         if (r.appPage()     != null) s.setAppPage(r.appPage());
     }
 
-    private SrcSelfGuidedTourResponse toResponse(SrcSelfGuidedTour s) {
-        return new SrcSelfGuidedTourResponse(
+    private SrcVolcanoResponse toResponse(SrcVolcano s) {
+        return new SrcVolcanoResponse(
                 s.getId(),
-                s.getSelfGuidedTour().getId(),
-                s.getSelfGuidedTour().getTitle(),
+                s.getVolcano().getId(),
+                s.getVolcano().getName(),
                 s.getType(),
                 s.getDescription(),
                 s.getSrcUrl(),

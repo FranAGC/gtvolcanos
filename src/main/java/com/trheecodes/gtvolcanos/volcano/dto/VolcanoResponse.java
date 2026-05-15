@@ -17,6 +17,8 @@ public record VolcanoResponse(
     Short vei,
     Integer casualties,
     Boolean monitored,
+    Integer popularity,
+    String imageUrl,
     String description,
     OffsetDateTime createdAt,
     OffsetDateTime updatedAt

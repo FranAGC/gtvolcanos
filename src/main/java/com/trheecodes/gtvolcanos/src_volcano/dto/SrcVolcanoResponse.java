@@ -1,11 +1,11 @@
-package com.trheecodes.gtvolcanos.src_self_guided.dto;
+package com.trheecodes.gtvolcanos.src_volcano.dto;
 
 import java.time.OffsetDateTime;
 
-public record SrcSelfGuidedTourResponse(
+public record SrcVolcanoResponse(
         Integer id,
-        Integer selfGuidedTourId,
-        String selfGuidedTourTitle,
+        Integer volcanoId,
+        String volcanoName,
         String type,
         String description,
         String srcUrl,

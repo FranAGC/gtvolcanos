@@ -4,5 +4,7 @@ public record VolcanoSummaryResponse(
     Integer id,
     String name,
     String country,
-    String region
+    String region,
+    Integer popularity,
+    String imageUrl
 ) {}

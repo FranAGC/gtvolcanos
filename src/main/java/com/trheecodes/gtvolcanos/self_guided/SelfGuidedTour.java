@@ -65,6 +65,4 @@ public class SelfGuidedTour {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @OneToMany(mappedBy = "selfGuidedTour", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<com.trheecodes.gtvolcanos.src_self_guided.SrcSelfGuidedTour> sources = new ArrayList<>();
 }

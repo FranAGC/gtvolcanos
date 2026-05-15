@@ -44,6 +44,8 @@ public record VolcanoRequest(
         Short vei,
         Integer casualties,
         Boolean monitored,
+        Integer popularity,
+        String imageUrl,
         String description
 ) {}
 

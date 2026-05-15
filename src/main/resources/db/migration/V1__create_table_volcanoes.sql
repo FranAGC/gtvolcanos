@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS volcanoes (
     vei               SMALLINT        CHECK (vei BETWEEN 0 AND 8),
     casualties        INT             DEFAULT 0,
     monitored         BOOLEAN         DEFAULT FALSE,
+    popularity        INT             UNIQUE,
+    image_url         TEXT,
     description       TEXT,
     created_at        TIMESTAMPTZ     DEFAULT NOW(),
     updated_at        TIMESTAMPTZ     DEFAULT NOW()

@@ -1,6 +1,6 @@
-package com.trheecodes.gtvolcanos.src_self_guided;
+package com.trheecodes.gtvolcanos.src_volcano;
 
-import com.trheecodes.gtvolcanos.self_guided.SelfGuidedTour;
+import com.trheecodes.gtvolcanos.volcano.Volcano;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,16 +10,16 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "src_self_guided_tours")
-public class SrcSelfGuidedTour {
+@Table(name = "src_volcanoes")
+public class SrcVolcano {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "self_guided_tour_id", nullable = false)
-    private SelfGuidedTour selfGuidedTour;
+    @JoinColumn(name = "volcano_id", nullable = false)
+    private Volcano volcano;
 
     @Column(nullable = false, length = 20)
     private String type;
