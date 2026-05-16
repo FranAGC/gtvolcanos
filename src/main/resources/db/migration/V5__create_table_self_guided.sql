@@ -25,12 +25,12 @@ FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 
 CREATE TABLE src_volcanoes (
     id                    INT             GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    volcano_id            INT             NOT NULL REFERENCES volcanoes (id) ON DELETE CASCADE,
-    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'route', 'guide', 'post','other')),
+    volcano_id            INT             REFERENCES volcanoes (id) ON DELETE CASCADE,
+    self_guided_tour_id   INT             REFERENCES self_guided_tours (id) ON DELETE CASCADE,
+    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'route', 'guide', 'post', 'other')),
     description           VARCHAR(200)    NOT NULL,
     src_url               TEXT            NOT NULL,
     app_page              VARCHAR(100),
     created_at            TIMESTAMPTZ     NOT NULL DEFAULT NOW()  -- útil para ordenar recursos
 );
-
 CREATE INDEX idx_src_volcanoes_volcano_id ON src_volcanoes (volcano_id);

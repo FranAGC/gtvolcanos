@@ -6,8 +6,6 @@ import java.util.List;
 
 public record SelfGuidedTourResponse(
         Integer id,
-        Integer volcanoId,
-        String volcanoName,
         String title,
         String difficulty,
         BigDecimal distanceKm,

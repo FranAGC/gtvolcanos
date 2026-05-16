@@ -18,6 +18,7 @@ public class SrcVolcanoService {
 
     private final SrcVolcanoRepository srcRepository;
     private final VolcanoRepository    volcanoRepository;
+    private final com.trheecodes.gtvolcanos.self_guided.SelfGuidedTourRepository selfGuidedRepository;
 
     // ── GET by volcano_id ────────────────────────────────────────────
 
@@ -34,18 +35,25 @@ public class SrcVolcanoService {
     // ── GET all (with optional type filter) ───────────────────────────────────
 
     @Transactional(readOnly = true)
-    public List<SrcVolcanoResponse> getAll(String type) {
-        List<SrcVolcano> result;
-        if (type != null && !type.isBlank()) {
-            result = srcRepository.findByTypeOrderByIdDesc(type);
-        } else {
-            result = srcRepository.findAllByOrderByIdDesc();
-        }
+    public List<SrcVolcanoResponse> getAll() {
+        List<SrcVolcano> result = srcRepository.findAllByOrderByIdDesc();
         // Limitar a los últimos 5 registros
         return result.stream()
                 .limit(5)
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SrcVolcanoResponse> getBySelfGuidedId(Integer selfguidedId) {
+        List<SrcVolcano> result = srcRepository.findBySelfGuidedTour_Id(selfguidedId);
+        return result.stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SrcVolcanoResponse> getHomePosts() {
+        List<SrcVolcano> result = srcRepository.findTop4ByTypeAndSelfGuidedTourIsNullOrderByIdDesc("post");
+        return result.stream().map(this::toResponse).toList();
     }
 
     // ── GET by id ─────────────────────────────────────────────────────────────
@@ -66,6 +74,13 @@ public class SrcVolcanoService {
         SrcVolcano src = new SrcVolcano();
         src.setVolcano(parent);
         applyPatch(src, request);
+        // set self guided tour if provided
+        if (request.selfGuidedTourId() != null) {
+            var s = selfGuidedRepository.findById(request.selfGuidedTourId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Tour auto-guiado no encontrado con id: " + request.selfGuidedTourId()));
+            src.setSelfGuidedTour(s);
+        }
         src.setCreatedAt(OffsetDateTime.now());
         srcRepository.save(src);
         return toResponse(src);
@@ -86,6 +101,14 @@ public class SrcVolcanoService {
         }
 
         applyPatch(src, request);
+        if (request.selfGuidedTourId() != null) {
+            var s = selfGuidedRepository.findById(request.selfGuidedTourId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Tour auto-guiado no encontrado con id: " + request.selfGuidedTourId()));
+            src.setSelfGuidedTour(s);
+        } else {
+            src.setSelfGuidedTour(null);
+        }
         return toResponse(src);
     }
 
@@ -117,13 +140,12 @@ public class SrcVolcanoService {
     private SrcVolcanoResponse toResponse(SrcVolcano s) {
         return new SrcVolcanoResponse(
                 s.getId(),
-                s.getVolcano().getId(),
-                s.getVolcano().getName(),
                 s.getType(),
                 s.getDescription(),
                 s.getSrcUrl(),
                 s.getAppPage(),
-                s.getCreatedAt()
+                s.getCreatedAt(),
+                s.getSelfGuidedTour() != null ? s.getSelfGuidedTour().getId() : null
         );
     }
 }

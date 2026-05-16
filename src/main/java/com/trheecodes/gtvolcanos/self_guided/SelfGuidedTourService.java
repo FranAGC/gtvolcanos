@@ -2,6 +2,7 @@ package com.trheecodes.gtvolcanos.self_guided;
 
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourRequest;
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourResponse;
+import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourSummaryResponse;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.volcano.Volcano;
 import com.trheecodes.gtvolcanos.volcano.VolcanoRepository;
@@ -22,12 +23,12 @@ public class SelfGuidedTourService {
     // ── GET by volcano_id ────────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
-    public List<SelfGuidedTourResponse> getByVolcanoId(Integer volcanoId) {
+    public List<SelfGuidedTourSummaryResponse> getByVolcanoId(Integer volcanoId) {
         if (!volcanoRepository.existsById(volcanoId)) {
             throw new ResourceNotFoundException("Volcán no encontrado con id: " + volcanoId);
         }
         return selfGuidedTourRepository.findByVolcanoId(volcanoId)
-                .stream().map(this::toResponse).toList();
+                .stream().map(this::toSummaryResponse).toList();
     }
 
     // ── GET by id ────────────────────────────────────────────────────────────
@@ -91,6 +92,15 @@ public class SelfGuidedTourService {
                         "Tour auto-guiado no encontrado con id: " + id));
     }
 
+    private SelfGuidedTourSummaryResponse toSummaryResponse(SelfGuidedTour t) {
+        return new SelfGuidedTourSummaryResponse(
+                t.getId(),
+                t.getTitle(),
+                t.getDifficulty(),
+                t.getDistanceKm()
+        );
+    }
+
     private void applyPatch(SelfGuidedTour t, SelfGuidedTourRequest r) {
         if (r.title()                != null) t.setTitle(r.title());
         if (r.difficulty()           != null) t.setDifficulty(r.difficulty());
@@ -107,8 +117,6 @@ public class SelfGuidedTourService {
     private SelfGuidedTourResponse toResponse(SelfGuidedTour t) {
         return new SelfGuidedTourResponse(
                 t.getId(),
-                t.getVolcano().getId(),
-                t.getVolcano().getName(),
                 t.getTitle(),
                 t.getDifficulty(),
                 t.getDistanceKm(),

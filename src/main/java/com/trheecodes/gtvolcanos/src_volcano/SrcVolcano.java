@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import com.trheecodes.gtvolcanos.self_guided.SelfGuidedTour;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class SrcVolcano {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "volcano_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "volcano_id", nullable = true)
     private Volcano volcano;
 
     @Column(nullable = false, length = 20)
@@ -32,6 +33,10 @@ public class SrcVolcano {
 
     @Column(name = "app_page", length = 100)
     private String appPage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "self_guided_tour_id")
+    private SelfGuidedTour selfGuidedTour;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

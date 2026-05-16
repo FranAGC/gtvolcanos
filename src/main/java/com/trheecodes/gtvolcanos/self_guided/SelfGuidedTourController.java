@@ -2,6 +2,7 @@ package com.trheecodes.gtvolcanos.self_guided;
 
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourRequest;
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourResponse;
+import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourSummaryResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,9 @@ public class SelfGuidedTourController {
     private final SelfGuidedTourService selfGuidedTourService;
 
     /** Público — todos los tours de un volcán. */
-    @GetMapping("/volcano/{volcanoId}")
-    public ResponseEntity<List<SelfGuidedTourResponse>> getByVolcanoId(
-            @PathVariable(name = "volcanoId") Integer volcanoId) {
+    @GetMapping
+    public ResponseEntity<List<SelfGuidedTourSummaryResponse>> getByVolcanoId(
+            @RequestParam(name = "volcanoId") Integer volcanoId) {
         return ResponseEntity.ok(selfGuidedTourService.getByVolcanoId(volcanoId));
     }
 

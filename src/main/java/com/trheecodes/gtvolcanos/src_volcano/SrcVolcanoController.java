@@ -21,8 +21,17 @@ public class SrcVolcanoController {
     /** Público — todos los recursos de volcanes con filtro opcional por type. */
     @GetMapping
     public ResponseEntity<List<SrcVolcanoResponse>> getAll(
-            @RequestParam(name = "type", required = false) String type) {
-        return ResponseEntity.ok(srcVolcanoService.getAll(type));
+            @RequestParam(name = "selfguidedId", required = false) Integer selfguidedId) {
+        if (selfguidedId != null) {
+            return ResponseEntity.ok(srcVolcanoService.getBySelfGuidedId(selfguidedId));
+        }
+        return ResponseEntity.ok(srcVolcanoService.getAll());
+    }
+
+    /** Público — últimos 4 posts de home (type=post y sin self_guided_tour_id) */
+    @GetMapping("/homeposts")
+    public ResponseEntity<List<SrcVolcanoResponse>> getHomePosts() {
+        return ResponseEntity.ok(srcVolcanoService.getHomePosts());
     }
 
     /** Público — todos los recursos de un volcán. */

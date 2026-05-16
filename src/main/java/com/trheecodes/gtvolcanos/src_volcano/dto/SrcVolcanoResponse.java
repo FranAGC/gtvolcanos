@@ -4,11 +4,10 @@ import java.time.OffsetDateTime;
 
 public record SrcVolcanoResponse(
         Integer id,
-        Integer volcanoId,
-        String volcanoName,
         String type,
         String description,
         String srcUrl,
         String appPage,
-        OffsetDateTime createdAt
+        OffsetDateTime createdAt,
+        Integer selfGuidedTourId
 ) {}

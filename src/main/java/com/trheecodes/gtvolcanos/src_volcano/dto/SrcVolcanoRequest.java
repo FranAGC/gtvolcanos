@@ -11,8 +11,8 @@ public record SrcVolcanoRequest(
         Integer volcanoId,
 
         @NotBlank(message = "El tipo es obligatorio")
-        @Pattern(regexp = "video|route|guide|other",
-                message = "type debe ser: video, route, guide u other")
+        @Pattern(regexp = "video|route|guide|post|other",
+                message = "type debe ser: video, route, guide, post u other")
         String type,
 
         @NotBlank(message = "La descripción es obligatoria")
@@ -24,4 +24,6 @@ public record SrcVolcanoRequest(
 
         @Size(max = 100)
         String appPage
+        ,
+        Integer selfGuidedTourId
 ) {}
