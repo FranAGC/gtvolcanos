@@ -5,6 +5,8 @@ public record VolcanoSummaryResponse(
     String name,
     String country,
     String region,
-    Integer popularity,
+    Boolean reto37,
+    Boolean isvolcano,
+    Boolean former37,
     String imageUrl
 ) {}

@@ -42,3 +42,5 @@ data/**
 logs/**
 .env.local
 .env.docker
+instrucciones.txt
+AGENTS.md

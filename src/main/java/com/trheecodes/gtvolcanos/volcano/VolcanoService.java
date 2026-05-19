@@ -1,6 +1,5 @@
 package com.trheecodes.gtvolcanos.volcano;
 
-import com.trheecodes.gtvolcanos.shared.exception.ConflictException;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.volcano.dto.VolcanoRequest;
 import com.trheecodes.gtvolcanos.volcano.dto.VolcanoResponse;
@@ -21,7 +20,7 @@ public class VolcanoService {
     @Transactional(readOnly = true)
     public Page<VolcanoSummaryResponse> getAllVolcanoes(Pageable pageable) {
         return volcanoRepository.findAll(pageable)
-                .map(v -> new VolcanoSummaryResponse(v.getId(), v.getName(), v.getCountry(), v.getRegion(), v.getPopularity(), v.getImageUrl()));
+                .map(v -> new VolcanoSummaryResponse(v.getId(), v.getName(), v.getCountry(), v.getRegion(), v.getReto37(), v.getIsvolcano(), v.getFormer37(), v.getImageUrl()));
     }
 
     @Transactional(readOnly = true)
@@ -33,16 +32,12 @@ public class VolcanoService {
                 v.getId(), v.getName(), v.getCountry(), v.getRegion(),
                 v.getLatitude(), v.getLongitude(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
-                v.getVei(), v.getCasualties(), v.getMonitored(), v.getPopularity(), v.getImageUrl(),
+                v.getVei(), v.getCasualties(), v.getMonitored(), v.getIsvolcano(), v.getReto37(), v.getFormer37(), v.getImageUrl(),
                 v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
     }
 
     @Transactional
     public VolcanoResponse createVolcano(VolcanoRequest request) {
-        if (request.popularity() != null && volcanoRepository.existsByPopularity(request.popularity())) {
-            throw new ConflictException("Ya existe un volcán con popularity: " + request.popularity());
-        }
-
         Volcano v = new Volcano();
         applyRequest(v, request);
         v.setCreatedAt(OffsetDateTime.now());
@@ -55,12 +50,6 @@ public class VolcanoService {
     public VolcanoResponse updateVolcano(Integer id, VolcanoRequest request) {
         Volcano v = volcanoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Volcán no encontrado con id: " + id));
-
-        if (request.popularity() != null 
-                && !request.popularity().equals(v.getPopularity()) 
-                && volcanoRepository.existsByPopularityAndIdNot(request.popularity(), id)) {
-            throw new ConflictException("Ya existe un volcán con popularity: " + request.popularity());
-        }
 
         applyRequest(v, request);
         v.setUpdatedAt(OffsetDateTime.now());
@@ -90,7 +79,9 @@ public class VolcanoService {
         v.setVei(r.vei());
         v.setCasualties(r.casualties() != null ? r.casualties() : 0);
         v.setMonitored(r.monitored() != null ? r.monitored() : false);
-        v.setPopularity(r.popularity());
+        v.setIsvolcano(r.isvolcano() != null ? r.isvolcano() : true);
+        v.setReto37(r.reto37() != null ? r.reto37() : false);
+        v.setFormer37(r.former37() != null ? r.former37() : false);
         v.setImageUrl(r.imageUrl());
         v.setDescription(r.description());
     }
@@ -100,7 +91,7 @@ public class VolcanoService {
                 v.getId(), v.getName(), v.getCountry(), v.getRegion(),
                 v.getLatitude(), v.getLongitude(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
-                v.getVei(), v.getCasualties(), v.getMonitored(), v.getPopularity(), v.getImageUrl(),
+                v.getVei(), v.getCasualties(), v.getMonitored(), v.getIsvolcano(), v.getReto37(), v.getFormer37(), v.getImageUrl(),
                 v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
     }
 }

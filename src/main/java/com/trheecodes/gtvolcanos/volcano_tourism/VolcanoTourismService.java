@@ -103,7 +103,7 @@ public class VolcanoTourismService {
      * Works for both POST (all fields start null/default) and PATCH.
      */
     private void applyPatch(VolcanoTourism e, VolcanoTourismRequest r) {
-        if (r.accessDifficulty()   != null) e.setAccessDifficulty(r.accessDifficulty());
+        if (r.difficulty()   != null) e.setDifficulty(r.difficulty());
         if (r.hikingTrail()        != null) e.setHikingTrail(r.hikingTrail());
         if (r.guidedTourRequired() != null) e.setGuidedTourRequired(r.guidedTourRequired());
         if (r.entranceFeeUsd()     != null) e.setEntranceFeeUsd(r.entranceFeeUsd());
@@ -126,7 +126,7 @@ public class VolcanoTourismService {
                 e.getId(),
                 e.getVolcano().getId(),
                 e.getVolcano().getName(),
-                e.getAccessDifficulty(),
+                e.getDifficulty(),
                 e.getHikingTrail(),
                 e.getGuidedTourRequired(),
                 e.getEntranceFeeUsd(),

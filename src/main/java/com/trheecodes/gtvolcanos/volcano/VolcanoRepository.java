@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VolcanoRepository extends JpaRepository<Volcano, Integer> {
-    boolean existsByPopularity(Integer popularity);
-    boolean existsByPopularityAndIdNot(Integer popularity, Integer id);
 }

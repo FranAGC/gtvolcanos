@@ -22,8 +22,8 @@ public class VolcanoTourism {
     @JoinColumn(name = "volcano_id", nullable = false)
     private Volcano volcano;
 
-    @Column(name = "access_difficulty", length = 20)
-    private String accessDifficulty;
+    @Column(name = "difficulty", length = 20)
+    private String difficulty;
 
     @Column(name = "hiking_trail")
     private Boolean hikingTrail = false;

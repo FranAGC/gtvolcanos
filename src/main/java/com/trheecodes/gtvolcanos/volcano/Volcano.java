@@ -54,8 +54,14 @@ public class Volcano {
     @Column
     private Boolean monitored = false;
 
-    @Column(unique = true)
-    private Integer popularity;
+    @Column
+    private Boolean isvolcano = true;
+
+    @Column
+    private Boolean reto37 = false;
+
+    @Column
+    private Boolean former37 = false;
 
     @Column(name = "image_url", columnDefinition = "text")
     private String imageUrl;

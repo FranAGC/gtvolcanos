@@ -7,7 +7,7 @@ public record VolcanoTourismResponse(
         Integer id,
         Integer volcanoId,
         String volcanoName,
-        String accessDifficulty,
+        String difficulty,
         Boolean hikingTrail,
         Boolean guidedTourRequired,
         BigDecimal entranceFeeUsd,

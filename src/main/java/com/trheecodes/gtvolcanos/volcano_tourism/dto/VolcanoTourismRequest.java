@@ -10,8 +10,8 @@ public record VolcanoTourismRequest(
         Integer volcanoId,
 
         @Pattern(regexp = "easy|moderate|hard|expert",
-                message = "accessDifficulty debe ser: easy, moderate, hard o expert")
-        String accessDifficulty,
+                message = "difficulty debe ser: easy, moderate, hard o expert")
+        String difficulty,
 
         Boolean hikingTrail,
         Boolean guidedTourRequired,
