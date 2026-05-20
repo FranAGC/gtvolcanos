@@ -7,8 +7,8 @@ import java.util.List;
 
 public record SelfGuidedTourRequest(
 
-        @NotNull(message = "El id del volcán es obligatorio")
-        Integer volcanoId,
+        @NotNull(message = "El id de la montaña es obligatorio")
+        Integer mountainId,
 
         @NotBlank(message = "El título es obligatorio")
         @Size(max = 150)

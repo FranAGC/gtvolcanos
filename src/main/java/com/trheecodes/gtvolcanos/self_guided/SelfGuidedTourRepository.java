@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SelfGuidedTourRepository extends JpaRepository<SelfGuidedTour, Integer> {
 
-    List<SelfGuidedTour> findByVolcanoId(Integer volcanoId);
+    List<SelfGuidedTour> findByMountainId(Integer mountainId);
 }

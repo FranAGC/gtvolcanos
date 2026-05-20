@@ -1,11 +1,11 @@
 package com.trheecodes.gtvolcanos.self_guided;
 
+import com.trheecodes.gtvolcanos.mountain.Mountain;
+import com.trheecodes.gtvolcanos.mountain.MountainRepository;
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourRequest;
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourResponse;
 import com.trheecodes.gtvolcanos.self_guided.dto.SelfGuidedTourSummaryResponse;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
-import com.trheecodes.gtvolcanos.volcano.Volcano;
-import com.trheecodes.gtvolcanos.volcano.VolcanoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,36 +18,30 @@ import java.util.List;
 public class SelfGuidedTourService {
 
     private final SelfGuidedTourRepository selfGuidedTourRepository;
-    private final VolcanoRepository        volcanoRepository;
-
-    // ── GET by volcano_id ────────────────────────────────────────────────────
+    private final MountainRepository        mountainRepository;
 
     @Transactional(readOnly = true)
-    public List<SelfGuidedTourSummaryResponse> getByVolcanoId(Integer volcanoId) {
-        if (!volcanoRepository.existsById(volcanoId)) {
-            throw new ResourceNotFoundException("Volcán no encontrado con id: " + volcanoId);
+    public List<SelfGuidedTourSummaryResponse> getByMountainId(Integer mountainId) {
+        if (!mountainRepository.existsById(mountainId)) {
+            throw new ResourceNotFoundException("Montaña no encontrada con id: " + mountainId);
         }
-        return selfGuidedTourRepository.findByVolcanoId(volcanoId)
+        return selfGuidedTourRepository.findByMountainId(mountainId)
                 .stream().map(this::toSummaryResponse).toList();
     }
-
-    // ── GET by id ────────────────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
     public SelfGuidedTourResponse getById(Integer id) {
         return toResponse(findOrThrow(id));
     }
 
-    // ── POST ─────────────────────────────────────────────────────────────────
-
     @Transactional
     public SelfGuidedTourResponse create(SelfGuidedTourRequest request) {
-        Volcano volcano = volcanoRepository.findById(request.volcanoId())
+        Mountain mountain = mountainRepository.findById(request.mountainId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Volcán no encontrado con id: " + request.volcanoId()));
+                        "Montaña no encontrada con id: " + request.mountainId()));
 
         SelfGuidedTour tour = new SelfGuidedTour();
-        tour.setVolcano(volcano);
+        tour.setMountain(mountain);
         applyPatch(tour, request);
         tour.setCreatedAt(OffsetDateTime.now());
         tour.setUpdatedAt(OffsetDateTime.now());
@@ -55,26 +49,22 @@ public class SelfGuidedTourService {
         return toResponse(tour);
     }
 
-    // ── PATCH ────────────────────────────────────────────────────────────────
-
     @Transactional
     public SelfGuidedTourResponse patch(Integer id, SelfGuidedTourRequest request) {
         SelfGuidedTour tour = findOrThrow(id);
 
-        if (request.volcanoId() != null
-                && !request.volcanoId().equals(tour.getVolcano().getId())) {
-            Volcano volcano = volcanoRepository.findById(request.volcanoId())
+        if (request.mountainId() != null
+                && !request.mountainId().equals(tour.getMountain().getId())) {
+            Mountain mountain = mountainRepository.findById(request.mountainId())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            "Volcán no encontrado con id: " + request.volcanoId()));
-            tour.setVolcano(volcano);
+                            "Montaña no encontrada con id: " + request.mountainId()));
+            tour.setMountain(mountain);
         }
 
         applyPatch(tour, request);
         tour.setUpdatedAt(OffsetDateTime.now());
         return toResponse(tour);
     }
-
-    // ── DELETE ───────────────────────────────────────────────────────────────
 
     @Transactional
     public void delete(Integer id) {
@@ -83,8 +73,6 @@ public class SelfGuidedTourService {
         }
         selfGuidedTourRepository.deleteById(id);
     }
-
-    // ── helpers ───────────────────────────────────────────────────────────────
 
     private SelfGuidedTour findOrThrow(Integer id) {
         return selfGuidedTourRepository.findById(id)

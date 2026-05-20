@@ -65,7 +65,7 @@ public record GuideRequest(
 
         Boolean active,
 
-        // ── Associated volcanoes ───────────────────────────────────────────
+        // ── Associated mountains ──────────────────────────────────────────
 
-        List<Integer> volcanoIds
+        List<Integer> mountainIds
 ) {}

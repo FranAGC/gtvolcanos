@@ -1,6 +1,6 @@
 package com.trheecodes.gtvolcanos.guide;
 
-import com.trheecodes.gtvolcanos.guide.guide_volcano.GuideVolcano;
+import com.trheecodes.gtvolcanos.guide.guide_mountain.GuideMountain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -93,5 +93,5 @@ public class Guide {
     // ── Relationships ──────────────────────────────────────────────────────
 
     @OneToMany(mappedBy = "guide", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GuideVolcano> guideVolcanoes = new ArrayList<>();
+    private List<GuideMountain> guideMountains = new ArrayList<>();
 }

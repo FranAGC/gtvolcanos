@@ -1,6 +1,6 @@
 package com.trheecodes.gtvolcanos.self_guided;
 
-import com.trheecodes.gtvolcanos.volcano.Volcano;
+import com.trheecodes.gtvolcanos.mountain.Mountain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +22,8 @@ public class SelfGuidedTour {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "volcano_id", nullable = false)
-    private Volcano volcano;
+    @JoinColumn(name = "mountain_id", nullable = false)
+    private Mountain mountain;
 
     @Column(nullable = false, length = 150)
     private String title;

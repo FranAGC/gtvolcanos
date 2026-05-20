@@ -27,11 +27,11 @@ public record GuideResponse(
         Short maxGroupSize,
         // Status
         Boolean active,
-        // Volcanoes
-        List<VolcanoRef> volcanoes,
+        // Mountains
+        List<MountainRef> mountains,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt
 ) {
-    /** Lightweight volcano reference embedded in the guide response. */
-    public record VolcanoRef(Integer id, String name, String country) {}
+    /** Lightweight mountain reference embedded in the guide response. */
+    public record MountainRef(Integer id, String name, Integer countryId) {}
 }

@@ -2,11 +2,11 @@ package com.trheecodes.gtvolcanos.guide;
 
 import com.trheecodes.gtvolcanos.guide.dto.GuideRequest;
 import com.trheecodes.gtvolcanos.guide.dto.GuideResponse;
-import com.trheecodes.gtvolcanos.guide.guide_volcano.GuideVolcano;
+import com.trheecodes.gtvolcanos.guide.guide_mountain.GuideMountain;
+import com.trheecodes.gtvolcanos.mountain.Mountain;
+import com.trheecodes.gtvolcanos.mountain.MountainRepository;
 import com.trheecodes.gtvolcanos.shared.exception.ConflictException;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
-import com.trheecodes.gtvolcanos.volcano.Volcano;
-import com.trheecodes.gtvolcanos.volcano.VolcanoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GuideService {
 
     private final GuideRepository guideRepository;
-    private final VolcanoRepository volcanoRepository;
+    private final MountainRepository mountainRepository;
 
     // ── GET all (paginated) ───────────────────────────────────────────────────
 
@@ -140,26 +140,26 @@ public class GuideService {
         if (r.active() != null)
             g.setActive(r.active());
 
-        if (r.volcanoIds() != null) {
-            g.getGuideVolcanoes().clear();
-            r.volcanoIds().forEach(vid -> {
-                Volcano v = volcanoRepository.findById(vid)
-                        .orElseThrow(() -> new ResourceNotFoundException("Volcán no encontrado con id: " + vid));
-                GuideVolcano gv = new GuideVolcano();
+        if (r.mountainIds() != null) {
+            g.getGuideMountains().clear();
+            r.mountainIds().forEach(vid -> {
+                Mountain v = mountainRepository.findById(vid)
+                        .orElseThrow(() -> new ResourceNotFoundException("Montaña no encontrada con id: " + vid));
+                GuideMountain gv = new GuideMountain();
                 gv.setGuide(g);
-                gv.setVolcano(v);
+                gv.setMountain(v);
                 gv.setIsPrimary(false);
-                g.getGuideVolcanoes().add(gv);
+                g.getGuideMountains().add(gv);
             });
         }
     }
 
     private GuideResponse toResponse(Guide g) {
-        List<GuideResponse.VolcanoRef> refs = g.getGuideVolcanoes().stream()
-                .map(gv -> new GuideResponse.VolcanoRef(
-                        gv.getVolcano().getId(),
-                        gv.getVolcano().getName(),
-                        gv.getVolcano().getCountry()))
+        List<GuideResponse.MountainRef> refs = g.getGuideMountains().stream()
+                .map(gv -> new GuideResponse.MountainRef(
+                        gv.getMountain().getId(),
+                        gv.getMountain().getName(),
+                        gv.getMountain().getCountryId()))
                 .toList();
 
         return new GuideResponse(

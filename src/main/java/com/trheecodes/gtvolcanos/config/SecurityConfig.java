@@ -72,23 +72,23 @@ public class SecurityConfig {
                                                                 "Acceso denegado",
                                                                 "No tienes permisos para este recurso")))
                                 .authorizeHttpRequests(auth -> auth
-                                                // ── Volcanoes ──────────────────────────────────────
-                                                // .requestMatchers(HttpMethod.GET, "/volcanoes",
-                                                // "/volcanoes/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/volcanoes")
+                                                // ── Mountains ──────────────────────────────────────
+                                                // .requestMatchers(HttpMethod.GET, "/mountains",
+                                                // "/mountains/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/mountains")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.PATCH, "/volcanoes/**")
+                                                .requestMatchers(HttpMethod.PATCH, "/mountains/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.DELETE, "/volcanoes/**")
+                                                .requestMatchers(HttpMethod.DELETE, "/mountains/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                // ── Volcano Tourism ────────────────────────────────
-                                                // .requestMatchers(HttpMethod.GET, "/volcano-tourism",
-                                                // "/volcano-tourism/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/volcano-tourism")
+                                                // ── Tourism Info ────────────────────────────────
+                                                // .requestMatchers(HttpMethod.GET, "/tourism-info",
+                                                // "/tourism-info/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/tourism-info")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.PATCH, "/volcano-tourism/**")
+                                                .requestMatchers(HttpMethod.PATCH, "/tourism-info/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.DELETE, "/volcano-tourism/**")
+                                                .requestMatchers(HttpMethod.DELETE, "/tourism-info/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
                                                 // ── Guides ─────────────────────────────────────────
                                                 // .requestMatchers(HttpMethod.GET, "/guides", "/guides/**").permitAll()
@@ -98,13 +98,13 @@ public class SecurityConfig {
                                                 .hasAnyRole("ADMIN", "EDITOR")
                                                 .requestMatchers(HttpMethod.DELETE, "/guides/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                // ── Guide-Volcano ──────────────────────────────────
-                                                // .requestMatchers(HttpMethod.GET, "/guide-volcano/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/guide-volcano")
+                                                // ── Guide-Mountain ──────────────────────────────────
+                                                // .requestMatchers(HttpMethod.GET, "/guide-mountain/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/guide-mountain")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.PATCH, "/guide-volcano/**")
+                                                .requestMatchers(HttpMethod.PATCH, "/guide-mountain/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
-                                                .requestMatchers(HttpMethod.DELETE, "/guide-volcano/**")
+                                                .requestMatchers(HttpMethod.DELETE, "/guide-mountain/**")
                                                 .hasAnyRole("ADMIN", "EDITOR")
                                                 // ── Users ──────────────────────────────────────────
                                                 .requestMatchers(HttpMethod.GET, "/**").permitAll()

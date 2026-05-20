@@ -19,14 +19,12 @@ public class SelfGuidedTourController {
 
     private final SelfGuidedTourService selfGuidedTourService;
 
-    /** Público — todos los tours de un volcán. */
     @GetMapping
-    public ResponseEntity<List<SelfGuidedTourSummaryResponse>> getByVolcanoId(
-            @RequestParam(name = "volcanoId") Integer volcanoId) {
-        return ResponseEntity.ok(selfGuidedTourService.getByVolcanoId(volcanoId));
+    public ResponseEntity<List<SelfGuidedTourSummaryResponse>> getByMountainId(
+            @RequestParam(name = "mountainId") Integer mountainId) {
+        return ResponseEntity.ok(selfGuidedTourService.getByMountainId(mountainId));
     }
 
-    /** Público — detalle de un tour por su id. */
     @GetMapping("/{id}")
     public ResponseEntity<SelfGuidedTourResponse> getById(@PathVariable(name = "id") Integer id) {
         return ResponseEntity.ok(selfGuidedTourService.getById(id));
