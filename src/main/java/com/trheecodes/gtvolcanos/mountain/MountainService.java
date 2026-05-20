@@ -2,6 +2,8 @@ package com.trheecodes.gtvolcanos.mountain;
 
 import com.trheecodes.gtvolcanos.mountain.dto.*;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
+import com.trheecodes.gtvolcanos.tourism_info.TourismInfo;
+import com.trheecodes.gtvolcanos.tourism_info.TourismInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MountainService {
 
     private final MountainRepository mountainRepository;
+    private final TourismInfoRepository tourismInfoRepository;
 
     @Transactional(readOnly = true)
     public Page<VolcanoResponse> getAllVolcanoes(Pageable pageable) {
@@ -38,8 +43,13 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public List<PopularMountainResponse> getPopular() {
-        return mountainRepository.findByReto37TrueOrFormer37True().stream()
-                .map(v -> new PopularMountainResponse(v.getId(), v.getName(), v.getRegion(), v.getLatitude(), v.getLongitude()))
+        List<Mountain> mountains = mountainRepository.findByReto37TrueOrFormer37True();
+        Map<Integer, String> alertLevels = tourismInfoRepository
+                .findByMountain_IdIn(mountains.stream().map(Mountain::getId).toList())
+                .stream()
+                .collect(Collectors.toMap(t -> t.getMountain().getId(), TourismInfo::getCurrentAlertLevel));
+        return mountains.stream()
+                .map(v -> new PopularMountainResponse(v.getId(), v.getName(), v.getRegion(), v.getLatitude(), v.getLongitude(), v.getImageUrl(), alertLevels.get(v.getId())))
                 .toList();
     }
 

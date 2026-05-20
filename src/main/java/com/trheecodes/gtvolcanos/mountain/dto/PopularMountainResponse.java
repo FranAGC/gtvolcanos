@@ -7,5 +7,7 @@ public record PopularMountainResponse(
     String name,
     String region,
     BigDecimal latitude,
-    BigDecimal longitude
+    BigDecimal longitude,
+    String imageUrl,
+    String currentAlertLevel
 ) {}

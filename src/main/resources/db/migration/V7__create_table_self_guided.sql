@@ -25,7 +25,7 @@ FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 
 CREATE TABLE src_mountains (
     id                    INT             GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    mountain_id            INT            REFERENCES mountains (id) ON DELETE CASCADE,
+    mountain_id           INT             REFERENCES mountains (id) ON DELETE CASCADE,
     self_guided_tour_id   INT             REFERENCES self_guided_tours (id) ON DELETE CASCADE,
     type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'ruta', 'guía', 'post', 'otro')),
     description           VARCHAR(200)    NOT NULL,
