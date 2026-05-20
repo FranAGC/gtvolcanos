@@ -1,7 +1,6 @@
 package com.trheecodes.gtvolcanos.mountain.dto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 public record MountainResponse(
     Integer id,
@@ -21,7 +20,5 @@ public record MountainResponse(
     Boolean reto37,
     Boolean former37,
     String imageUrl,
-    String description,
-    OffsetDateTime createdAt,
-    OffsetDateTime updatedAt
+    String description
 ) {}

@@ -1,7 +1,6 @@
 package com.trheecodes.gtvolcanos.guide.dto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 public record GuideResponse(
@@ -28,9 +27,7 @@ public record GuideResponse(
         // Status
         Boolean active,
         // Mountains
-        List<MountainRef> mountains,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
+        List<MountainRef> mountains
 ) {
     /** Lightweight mountain reference embedded in the guide response. */
     public record MountainRef(Integer id, String name, Integer countryId) {}

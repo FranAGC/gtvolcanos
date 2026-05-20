@@ -128,7 +128,6 @@ public class SrcMountainService {
                 s.getDescription(),
                 s.getSrcUrl(),
                 s.getAppPage(),
-                s.getCreatedAt(),
                 s.getSelfGuidedTour() != null ? s.getSelfGuidedTour().getId() : null
         );
     }

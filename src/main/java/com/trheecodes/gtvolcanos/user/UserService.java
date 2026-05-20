@@ -48,8 +48,7 @@ public class UserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getRole(),
-                user.getActive(),
-                user.getCreatedAt()
+                user.getActive()
         );
     }
 }

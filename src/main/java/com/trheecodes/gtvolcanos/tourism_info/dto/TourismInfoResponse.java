@@ -1,7 +1,6 @@
 package com.trheecodes.gtvolcanos.tourism_info.dto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 public record TourismInfoResponse(
         Integer id,
@@ -22,7 +21,5 @@ public record TourismInfoResponse(
         Boolean foodNearby,
         String currentAlertLevel,
         String emergencyContact,
-        String details,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
+        String details
 ) {}

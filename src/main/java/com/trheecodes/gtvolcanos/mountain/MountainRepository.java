@@ -11,4 +11,5 @@ public interface MountainRepository extends JpaRepository<Mountain, Integer> {
     Page<Mountain> findByIsVolcanoTrue(Pageable pageable);
     List<Mountain> findByReto37True();
     List<Mountain> findByFormer37True();
+    List<Mountain> findByReto37TrueOrFormer37True();
 }

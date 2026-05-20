@@ -114,9 +114,7 @@ public class SelfGuidedTourService {
                 t.getStartingPointLng(),
                 t.getInstructions(),
                 t.getRecommendedGear() != null ? List.of(t.getRecommendedGear()) : List.of(),
-                t.getActive(),
-                t.getCreatedAt(),
-                t.getUpdatedAt()
+                t.getActive()
         );
     }
 }

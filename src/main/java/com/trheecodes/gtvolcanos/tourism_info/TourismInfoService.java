@@ -122,9 +122,7 @@ public class TourismInfoService {
                 e.getFoodNearby(),
                 e.getCurrentAlertLevel(),
                 e.getEmergencyContact(),
-                e.getDetails(),
-                e.getCreatedAt(),
-                e.getUpdatedAt()
+                e.getDetails()
         );
     }
 }

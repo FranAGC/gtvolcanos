@@ -181,8 +181,6 @@ public class GuideService {
                 g.getPricePerDayUsd(),
                 g.getMaxGroupSize(),
                 g.getActive(),
-                refs,
-                g.getCreatedAt(),
-                g.getUpdatedAt());
+                refs);
     }
 }

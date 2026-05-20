@@ -37,6 +37,13 @@ public class MountainService {
     }
 
     @Transactional(readOnly = true)
+    public List<PopularMountainResponse> getPopular() {
+        return mountainRepository.findByReto37TrueOrFormer37True().stream()
+                .map(v -> new PopularMountainResponse(v.getId(), v.getName(), v.getRegion(), v.getLatitude(), v.getLongitude()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public MountainResponse getMountainById(Integer id) {
         Mountain v = mountainRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Montaña no encontrada con id: " + id));
@@ -46,7 +53,7 @@ public class MountainService {
                 v.getLatitude(), v.getLongitude(), v.getIsVolcano(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(), v.getReto37(), v.getFormer37(), v.getImageUrl(),
-                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
+                v.getDescription());
     }
 
     @Transactional
@@ -103,6 +110,6 @@ public class MountainService {
                 v.getLatitude(), v.getLongitude(), v.getIsVolcano(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(), v.getReto37(), v.getFormer37(), v.getImageUrl(),
-                v.getDescription(), v.getCreatedAt(), v.getUpdatedAt());
+                v.getDescription());
     }
 }

@@ -25,6 +25,11 @@ public class MountainController {
         return ResponseEntity.ok(mountainService.getAllVolcanoes(pageable));
     }
 
+    @GetMapping("/popular")
+    public ResponseEntity<List<PopularMountainResponse>> getPopular() {
+        return ResponseEntity.ok(mountainService.getPopular());
+    }
+
     @GetMapping("/reto37")
     public ResponseEntity<List<MountainRefResponse>> getReto37() {
         return ResponseEntity.ok(mountainService.getReto37());
