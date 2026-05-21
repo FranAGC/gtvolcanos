@@ -23,27 +23,32 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public Page<VolcanoResponse> getAllVolcanoes(Pageable pageable) {
-        return mountainRepository.findByIsVolcanoTrue(pageable)
-                .map(v -> new VolcanoResponse(v.getId(), v.getName(), v.getType(), v.getElevationM(), v.getRegion(), v.getLatitude(), v.getLongitude(), v.getLastEruption()));
+        Page<Mountain> mountainPage = mountainRepository.findByIsVolcanoTrue(pageable);
+        Map<Integer, String> alertLevels = tourismInfoRepository
+                .findByMountain_IdIn(mountainPage.getContent().stream().map(Mountain::getId).toList())
+                .stream()
+                .collect(Collectors.toMap(t -> t.getMountain().getId(), TourismInfo::getCurrentAlertLevel));
+        return mountainPage.map(v -> new VolcanoResponse(
+                v.getId(), v.getName(), v.getType(), v.getElevationM(), v.getRegion(),
+                v.getLatitude(), v.getLongitude(), v.getLastEruption(), v.getStatus(), alertLevels.get(v.getId())));
     }
 
     @Transactional(readOnly = true)
-    public List<MountainRefResponse> getReto37() {
-        return mountainRepository.findByReto37True().stream()
-                .map(v -> new MountainRefResponse(v.getId(), v.getName(), v.getRegion()))
-                .toList();
+    public List<PopularMountainResponse> getReto37() {
+        return toPopularResponse(mountainRepository.findByReto37True());
     }
 
     @Transactional(readOnly = true)
-    public List<MountainRefResponse> getFormer37() {
-        return mountainRepository.findByFormer37True().stream()
-                .map(v -> new MountainRefResponse(v.getId(), v.getName(), v.getRegion()))
-                .toList();
+    public List<PopularMountainResponse> getFormer37() {
+        return toPopularResponse(mountainRepository.findByFormer37True());
     }
 
     @Transactional(readOnly = true)
     public List<PopularMountainResponse> getPopular() {
-        List<Mountain> mountains = mountainRepository.findByReto37TrueOrFormer37True();
+        return toPopularResponse(mountainRepository.findByReto37TrueOrFormer37True());
+    }
+
+    private List<PopularMountainResponse> toPopularResponse(List<Mountain> mountains) {
         Map<Integer, String> alertLevels = tourismInfoRepository
                 .findByMountain_IdIn(mountains.stream().map(Mountain::getId).toList())
                 .stream()

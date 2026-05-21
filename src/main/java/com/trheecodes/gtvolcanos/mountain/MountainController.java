@@ -31,12 +31,12 @@ public class MountainController {
     }
 
     @GetMapping("/reto37")
-    public ResponseEntity<List<MountainRefResponse>> getReto37() {
+    public ResponseEntity<List<PopularMountainResponse>> getReto37() {
         return ResponseEntity.ok(mountainService.getReto37());
     }
 
     @GetMapping("/former37")
-    public ResponseEntity<List<MountainRefResponse>> getFormer37() {
+    public ResponseEntity<List<PopularMountainResponse>> getFormer37() {
         return ResponseEntity.ok(mountainService.getFormer37());
     }
 

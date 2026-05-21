@@ -10,5 +10,7 @@ public record VolcanoResponse(
     String region,
     BigDecimal latitude,
     BigDecimal longitude,
-    String lastEruption
+    String lastEruption,
+    String status,
+    String currentAlertLevel
 ) {}
