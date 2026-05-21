@@ -21,4 +21,6 @@ public interface SrcMountainRepository extends JpaRepository<SrcMountain, Intege
 
     List<SrcMountain> findBySelfGuidedTour_Id(Integer selfGuidedTourId);
 
+    List<SrcMountain> findByMountainIdAndType(Integer mountainId, String type);
+
 }

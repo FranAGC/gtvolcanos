@@ -21,7 +21,7 @@ spring:
   # ===== JPA / HIBERNATE =====
   jpa:
     hibernate:
-      ddl-auto: validate # Flyway maneja la BD, JPA solo valida
+      ddl-auto: none # Flyway maneja la BD, JPA solo valida
     show-sql: false
     properties:
       hibernate:

@@ -1,11 +1,7 @@
 package com.trheecodes.gtvolcanos.src_mountain.dto;
 
-public record SrcMountainResponse(
-        Integer id,
-        String type,
+public record SrcMountainImageResponse(
         String description,
         String srcUrl,
-        String appPage,
-        Integer selfGuidedTourId,
         String additionalInfo
 ) {}

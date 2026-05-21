@@ -27,10 +27,11 @@ CREATE TABLE src_mountains (
     id                    INT             GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     mountain_id           INT             REFERENCES mountains (id) ON DELETE CASCADE,
     self_guided_tour_id   INT             REFERENCES self_guided_tours (id) ON DELETE CASCADE,
-    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'ruta', 'guía', 'post', 'otro')),
+    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'ruta', 'guia', 'post', 'imagen' 'otro')),
     description           VARCHAR(200)    NOT NULL,
     src_url               TEXT            NOT NULL,
     app_page              VARCHAR(100),
+    additional_info        VARCHAR(200),
     created_at            TIMESTAMPTZ     NOT NULL DEFAULT NOW()  -- útil para ordenar recursos
 );
 CREATE INDEX idx_src_mountains_mountain_id ON src_mountains (mountain_id);

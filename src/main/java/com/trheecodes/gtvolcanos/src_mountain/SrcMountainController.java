@@ -1,5 +1,6 @@
 package com.trheecodes.gtvolcanos.src_mountain;
 
+import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainImageResponse;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainRequest;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainResponse;
 import jakarta.validation.Valid;
@@ -36,6 +37,12 @@ public class SrcMountainController {
     public ResponseEntity<List<SrcMountainResponse>> getByMountainId(
             @PathVariable(name = "mountainId") Integer mountainId) {
         return ResponseEntity.ok(srcMountainService.getByMountainId(mountainId));
+    }
+
+    @GetMapping("/images/{mountainId}")
+    public ResponseEntity<List<SrcMountainImageResponse>> getImagesByMountainId(
+            @PathVariable(name = "mountainId") Integer mountainId) {
+        return ResponseEntity.ok(srcMountainService.getImagesByMountainId(mountainId));
     }
 
     @GetMapping("/{id}")

@@ -11,8 +11,8 @@ public record SrcMountainRequest(
         Integer mountainId,
 
         @NotBlank(message = "El tipo es obligatorio")
-        @Pattern(regexp = "video|route|guide|post|other",
-                message = "type debe ser: video, route, guide, post u other")
+        @Pattern(regexp = "video|route|guide|post|other|imagen",
+                message = "type debe ser: video, route, guide, post, other o imagen")
         String type,
 
         @NotBlank(message = "La descripción es obligatoria")
@@ -25,5 +25,8 @@ public record SrcMountainRequest(
         @Size(max = 100)
         String appPage
         ,
-        Integer selfGuidedTourId
+        Integer selfGuidedTourId,
+
+        @Size(max = 500)
+        String additionalInfo
 ) {}

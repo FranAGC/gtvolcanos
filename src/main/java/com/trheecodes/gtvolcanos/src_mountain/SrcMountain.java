@@ -34,6 +34,9 @@ public class SrcMountain {
     @Column(name = "app_page", length = 100)
     private String appPage;
 
+    @Column(name = "additional_info", columnDefinition = "text")
+    private String additionalInfo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "self_guided_tour_id")
     private SelfGuidedTour selfGuidedTour;

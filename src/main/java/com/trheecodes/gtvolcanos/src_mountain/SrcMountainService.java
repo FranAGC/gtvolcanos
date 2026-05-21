@@ -3,6 +3,7 @@ package com.trheecodes.gtvolcanos.src_mountain;
 import com.trheecodes.gtvolcanos.mountain.Mountain;
 import com.trheecodes.gtvolcanos.mountain.MountainRepository;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
+import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainImageResponse;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainRequest;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,15 @@ public class SrcMountainService {
     public List<SrcMountainResponse> getHomePosts() {
         List<SrcMountain> result = srcRepository.findTop4ByTypeAndSelfGuidedTourIsNullOrderByIdDesc("post");
         return result.stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SrcMountainImageResponse> getImagesByMountainId(Integer mountainId) {
+        if (!mountainRepository.existsById(mountainId)) {
+            throw new ResourceNotFoundException("Montaña no encontrada con id: " + mountainId);
+        }
+        return srcRepository.findByMountainIdAndType(mountainId, "imagen")
+                .stream().map(this::toImageResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -115,10 +125,11 @@ public class SrcMountainService {
     }
 
     private void applyPatch(SrcMountain s, SrcMountainRequest r) {
-        if (r.type()        != null) s.setType(r.type());
-        if (r.description() != null) s.setDescription(r.description());
-        if (r.srcUrl()      != null) s.setSrcUrl(r.srcUrl());
-        if (r.appPage()     != null) s.setAppPage(r.appPage());
+        if (r.type()           != null) s.setType(r.type());
+        if (r.description()    != null) s.setDescription(r.description());
+        if (r.srcUrl()         != null) s.setSrcUrl(r.srcUrl());
+        if (r.appPage()        != null) s.setAppPage(r.appPage());
+        if (r.additionalInfo() != null) s.setAdditionalInfo(r.additionalInfo());
     }
 
     private SrcMountainResponse toResponse(SrcMountain s) {
@@ -128,7 +139,16 @@ public class SrcMountainService {
                 s.getDescription(),
                 s.getSrcUrl(),
                 s.getAppPage(),
-                s.getSelfGuidedTour() != null ? s.getSelfGuidedTour().getId() : null
+                s.getSelfGuidedTour() != null ? s.getSelfGuidedTour().getId() : null,
+                s.getAdditionalInfo()
+        );
+    }
+
+    private SrcMountainImageResponse toImageResponse(SrcMountain s) {
+        return new SrcMountainImageResponse(
+                s.getDescription(),
+                s.getSrcUrl(),
+                s.getAdditionalInfo()
         );
     }
 }
