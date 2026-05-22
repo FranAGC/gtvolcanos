@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public record MountainResponse(
     Integer id,
     String name,
-    Integer countryId,
+    String countryName,
     String region,
     BigDecimal latitude,
     BigDecimal longitude,

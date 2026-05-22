@@ -23,4 +23,6 @@ public interface SrcMountainRepository extends JpaRepository<SrcMountain, Intege
 
     List<SrcMountain> findByMountainIdAndType(Integer mountainId, String type);
 
+    List<SrcMountain> findByMountainIdAndTypeNotIn(Integer mountainId, List<String> types);
+
 }

@@ -1,5 +1,6 @@
 package com.trheecodes.gtvolcanos.mountain;
 
+import com.trheecodes.gtvolcanos.country.CountryRepository;
 import com.trheecodes.gtvolcanos.mountain.dto.*;
 import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.tourism_info.TourismInfo;
@@ -7,6 +8,7 @@ import com.trheecodes.gtvolcanos.tourism_info.TourismInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
@@ -20,6 +22,7 @@ public class MountainService {
 
     private final MountainRepository mountainRepository;
     private final TourismInfoRepository tourismInfoRepository;
+    private final CountryRepository countryRepository;
 
     @Transactional(readOnly = true)
     public Page<VolcanoResponse> getAllVolcanoes(Pageable pageable) {
@@ -35,7 +38,7 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public List<PopularMountainResponse> getReto37() {
-        return toPopularResponse(mountainRepository.findByReto37True());
+        return toPopularResponse(mountainRepository.findByReto37True(Sort.by(Sort.Direction.ASC, "id")));
     }
 
     @Transactional(readOnly = true)
@@ -63,8 +66,12 @@ public class MountainService {
         Mountain v = mountainRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Montaña no encontrada con id: " + id));
 
+        String countryName = countryRepository.findById(v.getCountryId())
+                .map(c -> c.getName())
+                .orElse(null);
+
         return new MountainResponse(
-                v.getId(), v.getName(), v.getCountryId(), v.getRegion(),
+                v.getId(), v.getName(), countryName, v.getRegion(),
                 v.getLatitude(), v.getLongitude(), v.getIsVolcano(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(), v.getReto37(), v.getFormer37(), v.getImageUrl(),
@@ -120,8 +127,12 @@ public class MountainService {
     }
 
     private MountainResponse toResponse(Mountain v) {
+        String countryName = countryRepository.findById(v.getCountryId())
+                .map(c -> c.getName())
+                .orElse(null);
+
         return new MountainResponse(
-                v.getId(), v.getName(), v.getCountryId(), v.getRegion(),
+                v.getId(), v.getName(), countryName, v.getRegion(),
                 v.getLatitude(), v.getLongitude(), v.getIsVolcano(), v.getElevationM(),
                 v.getType(), v.getStatus(), v.getLastEruption(),
                 v.getVei(), v.getCasualties(), v.getMonitored(), v.getReto37(), v.getFormer37(), v.getImageUrl(),

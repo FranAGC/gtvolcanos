@@ -3,6 +3,7 @@ package com.trheecodes.gtvolcanos.src_mountain;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainImageResponse;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainRequest;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainResponse;
+import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainSummaryResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,9 +46,10 @@ public class SrcMountainController {
         return ResponseEntity.ok(srcMountainService.getImagesByMountainId(mountainId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SrcMountainResponse> getById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok(srcMountainService.getById(id));
+    @GetMapping("/{mountainId}")
+    public ResponseEntity<List<SrcMountainSummaryResponse>> getByMountainIdWithoutPostAndImagen(
+            @PathVariable(name = "mountainId") Integer mountainId) {
+        return ResponseEntity.ok(srcMountainService.getByMountainIdWithoutPostAndImagen(mountainId));
     }
 
     @PostMapping

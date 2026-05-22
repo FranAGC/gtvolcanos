@@ -11,8 +11,8 @@ public record SrcMountainRequest(
         Integer mountainId,
 
         @NotBlank(message = "El tipo es obligatorio")
-        @Pattern(regexp = "video|route|guide|post|other|imagen",
-                message = "type debe ser: video, route, guide, post, other o imagen")
+        @Pattern(regexp = "video|ruta|guia|post|otro|imagen",
+                message = "type debe ser: video, ruta, guia, post, otro o imagen")
         String type,
 
         @NotBlank(message = "La descripción es obligatoria")

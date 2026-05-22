@@ -6,6 +6,7 @@ import com.trheecodes.gtvolcanos.shared.exception.ResourceNotFoundException;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainImageResponse;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainRequest;
 import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainResponse;
+import com.trheecodes.gtvolcanos.src_mountain.dto.SrcMountainSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +65,15 @@ public class SrcMountainService {
     @Transactional(readOnly = true)
     public SrcMountainResponse getById(Integer id) {
         return toResponse(findOrThrow(id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SrcMountainSummaryResponse> getByMountainIdWithoutPostAndImagen(Integer mountainId) {
+        if (!mountainRepository.existsById(mountainId)) {
+            throw new ResourceNotFoundException("MontaÃ±a no encontrada con id: " + mountainId);
+        }
+        return srcRepository.findByMountainIdAndTypeNotIn(mountainId, List.of("post", "imagen"))
+                .stream().map(this::toSummaryResponse).toList();
     }
 
     @Transactional
@@ -146,6 +156,15 @@ public class SrcMountainService {
 
     private SrcMountainImageResponse toImageResponse(SrcMountain s) {
         return new SrcMountainImageResponse(
+                s.getDescription(),
+                s.getSrcUrl(),
+                s.getAdditionalInfo()
+        );
+    }
+
+    private SrcMountainSummaryResponse toSummaryResponse(SrcMountain s) {
+        return new SrcMountainSummaryResponse(
+                s.getId(),
                 s.getDescription(),
                 s.getSrcUrl(),
                 s.getAdditionalInfo()
