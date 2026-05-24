@@ -45,3 +45,5 @@ logs/**
 instrucciones.txt
 AGENTS.md
 solution.md
+deploy.md
+docker-compose-prod.yml

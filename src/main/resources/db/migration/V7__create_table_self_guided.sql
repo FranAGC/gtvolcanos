@@ -27,7 +27,7 @@ CREATE TABLE src_mountains (
     id                    INT             GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     mountain_id           INT             REFERENCES mountains (id) ON DELETE CASCADE,
     self_guided_tour_id   INT             REFERENCES self_guided_tours (id) ON DELETE CASCADE,
-    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'ruta', 'guia', 'post', 'imagen' 'otro')),
+    type                  VARCHAR(20)     NOT NULL CHECK (type IN ('video', 'ruta', 'guia', 'post', 'imagen', 'otro')),
     description           VARCHAR(200)    NOT NULL,
     src_url               TEXT            NOT NULL,
     app_page              VARCHAR(100),

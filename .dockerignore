@@ -6,5 +6,9 @@ out/
 data/
 errors.log
 .env
+.env.local
 Dockerfile
 .dockerignore
+*.md
+*.log
+*.txt
